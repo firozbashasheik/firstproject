@@ -1,0 +1,218 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script> 
+<script>
+    $(document).ready(function(){
+     $("#res").hide();
+    $("#submit").click(function(){
+      if(ref==1){
+        $("#res").show();
+      }  
+      
+    });
+    }); 
+    
+</script>
+<style>
+	#My_Area{
+		  background-color: #4CAF50 !important;
+
+	}
+
+h1 {
+	color:black;
+}
+input[type=text] {
+  width: 30%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#submit {
+  width: 30%;
+  background-color: blueviolet;
+  color: white;
+ 
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#submit:hover {
+  background-color: #45a049;
+}
+
+#formid {
+  border-radius: 5px;
+  background-color:#fff1d0;
+  width:30%;
+}
+#pincodedetails {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#pincodedetails td, #pincodedetails th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#pincodedetails tr:nth-child(even){background-color: #f2f2f2;}
+
+#pincodedetails tr:hover {background-color: #ddd;}
+
+#pincodedetails th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color:blueviolet;
+  color: white;
+}
+</style>
+
+</head>
+<body>
+	<div align="Center">
+	<div  id="formid" >
+		<br>
+		<h1 align="center"> Pincode Details </h1>
+		<br>
+		<h3 align:"center">Pincode:</h3>
+	
+		<input type="text" name="pin"  id="pin">
+		<br>
+		
+		<button onclick="getPincode()" style="padding:15px"id="submit">Submit</button>
+		<br>
+		<br>
+</div>
+</div>
+<br>
+<br>
+	<div align="center" id="res">
+		<h2>Resultant pincode details</h2>
+
+		<table align="center" id="pincodedetails">
+			<thead>
+				<tr>
+					<th>Block</th>
+					<th>Name</th>
+					<th>Branch Type</th>
+					<th>Delivery Status</th>
+					<th>Circle</th>
+					<th>District</th>
+					<th>Division</th>
+					<th>Region</th>
+					<th>Block</th>
+					<th>District</th>
+					<th>State</th>
+					<th>Country</th>
+					<th>Pincode</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody id="data">
+			</tbody>
+			
+		</table>
+		<br>
+		<br>
+		<br>
+	</div>
+
+</body>
+<script> 
+    var ref=1;
+	function getPincode(){
+	var pin = document.getElementById('pin').value;
+	if(pin==null || pin=="" ||pin.length<6 || pin.length>6||(pin % 111111)==0 || isNaN(pin)){
+      ref=0;
+    alert("Invalid! please type correct pincode");
+		window.location.replace("frontend.html");
+		}
+var url = "https://api.postalpincode.in/pincode/"+pin;
+
+console.log(url);
+
+// http request
+  var request = new XMLHttpRequest();
+ request.open("GET", url, true);
+ request.send();
+ request.onload = () =>{
+ 	console.log(request);
+ 	if( request.status ===200){
+ 		
+ 		if(JSON.parse(request.response).length>0){
+             var temp="";  
+             obj =JSON.parse(request.response);
+             var m=obj[0].Message.split(":");
+
+             if(m[1]>0){
+ 		JSON.parse(request.response).forEach((pin)=>{
+
+ 		
+		pin.PostOffice.forEach((eachPincode)=>{ 
+
+			if(eachPincode.Name =="Penumaka"){
+			
+				console.log(eachPincode.Name+"Your area");
+			temp+="<tr id='My_Area'>";
+			temp+= "<td>"+	eachPincode.Block + "</td>";
+			temp+= "<td>"+	(eachPincode.Name).replace("(O)","") +"</td>";
+			temp+= "<td>"+	eachPincode.BranchType + "</td>";
+			temp+= "<td>"+	eachPincode.DeliveryStatus + "</td>";
+			temp+= "<td>"+	eachPincode.Circle + "</td>";
+			temp+= "<td>"+	eachPincode.District + "</td>";
+			temp+= "<td>"+	eachPincode.Division + "</td>";
+			temp+= "<td>"+	eachPincode.Region + "</td>";
+			temp+= "<td>"+	eachPincode.Block + "</td>";
+			temp+= "<td>"+	eachPincode.District + "</td>";
+			temp+= "<td>"+	eachPincode.State + "</td>";
+			temp+= "<td>"+	eachPincode.Country + "</td>";
+			temp+= "<td>"+	eachPincode.Pincode + "</td>";
+			temp+= "<td>"+	eachPincode.Description + "</td></tr>";
+
+			}
+			else{
+				console.log(eachPincode.Name + "Not your area");	
+			temp+="<tr>";
+			temp+= "<td>"+	eachPincode.Block + "</td>";
+			temp+= "<td>"+	(eachPincode.Name).replace("(O)","") + "</td>";
+			temp+= "<td>"+	eachPincode.BranchType + "</td>";
+			temp+= "<td>"+	eachPincode.DeliveryStatus + "</td>";
+			temp+= "<td>"+	eachPincode.Circle + "</td>";
+			temp+= "<td>"+	eachPincode.District + "</td>";
+			temp+= "<td>"+	eachPincode.Division + "</td>";
+			temp+= "<td>"+	eachPincode.Region + "</td>";
+			temp+= "<td>"+	eachPincode.Block + "</td>";
+			temp+= "<td>"+	eachPincode.District + "</td>";
+			temp+= "<td>"+	eachPincode.State + "</td>";
+			temp+= "<td>"+	eachPincode.Country + "</td>";
+			temp+= "<td>"+	eachPincode.Pincode + "</td>";
+			temp+= "<td>"+	eachPincode.Description + "</td></tr>";
+			}
+
+			})
+ 	})
+ 							document.getElementById("data").innerHTML = temp;
+             }
+ else{
+    document.getElementById("data").innerHTML="No data found";
+ } 
+            }
+
+}
+
+ 	
+
+}
+}
+</script>
+
+</html>
